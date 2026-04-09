@@ -1,0 +1,164 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int roll;
+    string name;
+    float marks;
+    Node* next;
+
+    Node(int r, string n, float m) {
+        roll = r;
+        name = n;
+        marks = m;
+        next = nullptr;
+    }
+};
+
+class StudentList {
+private:
+    Node* head;
+
+public:
+    StudentList() {
+        head = nullptr;
+    }
+
+    void insertEnd(int r, string n, float m) {
+        Node* newNode = new Node(r, n, m);
+
+        if (head == nullptr) {
+            head = newNode;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr) temp = temp->next;
+        temp->next = newNode;
+    }
+
+    void deleteByRoll(int r) {
+        if (head == nullptr) return;
+
+        if (head->roll == r) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->roll != r) {
+            temp = temp->next;
+        }
+
+        if (temp->next != nullptr) {
+            Node* del = temp->next;
+            temp->next = del->next;
+            delete del;
+        }
+    }
+
+    void display() {
+        Node* temp = head;
+
+        while (temp != nullptr) {
+            cout << temp->roll << " " << temp->name << " " << temp->marks << endl;
+            temp = temp->next;
+        }
+    }
+
+    void search(int r) {
+        Node* temp = head;
+
+        while (temp != nullptr) {
+            if (temp->roll == r) {
+                cout << temp->roll << " " << temp->name << " " << temp->marks << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+
+        cout << "Not Found" << endl;
+    }
+
+    void update(int r) {
+        Node* temp = head;
+
+        while (temp != nullptr) {
+            if (temp->roll == r) {
+                cin >> temp->name >> temp->marks;
+                return;
+            }
+            temp = temp->next;
+        }
+    }
+
+    void stats() {
+        if (head == nullptr) return;
+
+        Node* temp = head;
+        float sum = 0, max = temp->marks, min = temp->marks;
+        int count = 0;
+
+        while (temp != nullptr) {
+            if (temp->marks > max) max = temp->marks;
+            if (temp->marks < min) min = temp->marks;
+
+            sum += temp->marks;
+            count++;
+            temp = temp->next;
+        }
+
+        cout << "Max: " << max << endl;
+        cout << "Min: " << min << endl;
+        cout << "Avg: " << sum / count << endl;
+    }
+};
+
+int main() {
+    StudentList s;
+    int choice, roll;
+    string name;
+    float marks;
+
+    do {
+        cout <<"1 Insert"<<endl;
+        cout<<"2 Delete"<<endl;
+        cout<<"3 Display"<<endl;
+        cout<<"4 Search"<<endl;
+        cout<<"5 Update"<<endl;
+        cout<<"6 Stats"<<endl;
+        cout<<"7 Exit"<<endl;
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cin >> roll >> name >> marks;
+            s.insertEnd(roll, name, marks);
+            break;
+        case 2:
+            cin >> roll;
+            s.deleteByRoll(roll);
+            break;
+        case 3:
+            s.display();
+            break;
+        case 4:
+            cin >> roll;
+            s.search(roll);
+            break;
+        case 5:
+            cin >> roll;
+            s.update(roll);
+            break;
+        case 6:
+            s.stats();
+            break;
+        }
+
+    } while (choice != 7);
+
+    return 0;
+}
