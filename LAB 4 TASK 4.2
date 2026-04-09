@@ -1,0 +1,100 @@
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    int arr[100];
+    int top;
+
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(int x) {
+        if (top == 99) {
+            cout << "Stack Overflow" << endl;
+            return;
+        }
+        arr[++top] = x;
+    }
+
+    int pop() {
+        if (top == -1) {
+            cout << "Stack Underflow" << endl;
+            return -1;
+        }
+        return arr[top--];
+    }
+
+    int peek() {
+        if (top == -1) return -1;
+        return arr[top];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
+class QueueUsingStacks {
+private:
+    Stack s1, s2;
+
+public:
+    void enqueue(int x) {
+        s1.push(x);
+    }
+
+    int dequeue() {
+        if (s2.isEmpty()) {
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+        }
+
+        if (s2.isEmpty()) {
+            cout << "Queue is Empty" << endl;
+            return -1;
+        }
+
+        return s2.pop();
+    }
+
+    int front() {
+        if (s2.isEmpty()) {
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+        }
+
+        if (s2.isEmpty()) {
+            cout << "Queue is Empty" << endl;
+            return -1;
+        }
+
+        return s2.peek();
+    }
+
+    void display() {
+        Stack temp1 = s1;
+        Stack temp2 = s2;
+
+      
+        while (!temp2.isEmpty()) {
+            cout << temp2.pop() << " ";
+        }
+
+       
+        Stack reverse;
+        while (!temp1.isEmpty()) {
+            reverse.push(temp1.pop());
+        }
+
+        while (!reverse.isEmpty()) {
+            cout << reverse.pop() << " ";
+        }
+
+        cout << endl;
+    }
+};
