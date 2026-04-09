@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class AbstractQueue {
+public:
+    virtual void enQueue(T value) = 0;
+    virtual T deQueue() = 0;
+    virtual T front() const = 0;
+    virtual bool isEmpty() const = 0;
+    virtual bool isFull() const = 0;
+    virtual ~AbstractQueue() {}
+};
+
+
+template <typename T>
+class myQueue : public AbstractQueue<T> {
+private:
+    T* arr;
+    int frontIndex, rear, size, capacity;
+
+public:
+    myQueue(int cap) {
+        capacity = cap;
+        arr = new T[capacity];
+        frontIndex = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    void enQueue(T value) {
+        if (isFull()) {
+            cout << "Queue is Full" << endl;
+            return;
+        }
+        rear++;
+        arr[rear] = value;
+        size++;
+    }
+
+    T deQueue() {
+        if (isEmpty()) {
+            cout << "Queue is Empty" << endl;
+            return -1;
+        }
+        T val = arr[frontIndex];
+        frontIndex++;
+        size--;
+        return val;
+    }
+
+    T front() const {
+        if (isEmpty()) {
+            cout << "Queue is Empty" << endl;
+            return -1;
+        }
+        return arr[frontIndex];
+    }
+
+    bool isEmpty() const {
+        return size == 0;
+    }
+
+    bool isFull() const {
+        return size == capacity;
+    }
+
+    void display() const {
+        if (isEmpty()) {
+            cout << "Queue is Empty" << endl;
+            return;
+        }
+        for (int i = frontIndex; i <= rear; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    myQueue<int> q(5);
+    int choice, value;
+
+    do {
+        cout <<"1.Enqueue"<<endl;
+        cout<<"2.Dequeue"<<endl;
+        cout<<"3.Front."<<endl; 
+        cout<<"4.Display"<<endl;
+        cout<<"5. Exit"<<endl;
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter value: ";
+            cin >> value;
+            q.enQueue(value);
+            break;
+        case 2:
+            cout << "Removed: " << q.deQueue() << endl;
+            break;
+        case 3:
+            cout << "Front: " << q.front() << endl;
+            break;
+        case 4:
+            q.display();
+            break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
