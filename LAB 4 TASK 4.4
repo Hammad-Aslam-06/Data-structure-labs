@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+class TicketQueue {
+private:
+    int arr[100];
+    int front, rear;
+
+public:
+    TicketQueue() {
+        front = 0;
+        rear = -1;
+    }
+
+    void enqueue(int id) {
+        arr[++rear] = id;
+        cout << "Ticket Added: " << id << endl;
+    }
+
+    void dequeue() {
+        if (front > rear) {
+            cout << "No tickets" << endl;
+            return;
+        }
+        cout << "Resolved Ticket: " << arr[front++] << endl;
+    }
+
+    void showFront() {
+        if (front > rear) {
+            cout << "No tickets" << endl;
+            return;
+        }
+        cout << "Next Ticket: " << arr[front] << endl;
+    }
+
+    void display() {
+        if (front > rear) {
+            cout << "No tickets" << endl;
+            return;
+        }
+
+        for (int i = front; i <= rear; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    TicketQueue tq;
+    int choice, id;
+
+    do {
+        cout <<"1. Add Ticket"<<endl;
+        cout<<"2. Resolve Ticket"<<endl;
+        cout<<"3. Next Ticket"<<endl;
+        cout<<"4. Display"<<endl;
+        cout<<"5. Exit"<<endl;
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter 4-digit ID: ";
+            cin >> id;
+            tq.enqueue(id);
+            break;
+        case 2:
+            tq.dequeue();
+            break;
+        case 3:
+            tq.showFront();
+            break;
+        case 4:
+            tq.display();
+            break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
