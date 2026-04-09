@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    string arr[100];
+    int front, rear;
+
+public:
+    Queue() {
+        front = 0;
+        rear = -1;
+    }
+
+    void enqueue(string x) {
+        arr[++rear] = x;
+    }
+
+    string dequeue() {
+        if (front > rear) return "";
+        return arr[front++];
+    }
+
+    bool isEmpty() {
+        return front > rear;
+    }
+
+    void display() {
+        for (int i = front; i <= rear; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+class Airport {
+private:
+    Queue emergency, passenger, cargo;
+
+public:
+    void enqueue(string type, string id) {
+        if (type == "E") emergency.enqueue(id);
+        else if (type == "P") passenger.enqueue(id);
+        else cargo.enqueue(id);
+    }
+
+    void dequeue() {
+        if (!emergency.isEmpty()) {
+            cout << "Landing: " << emergency.dequeue() << endl;
+        } else if (!passenger.isEmpty()) {
+            cout << "Landing: " << passenger.dequeue() << endl;
+        } else if (!cargo.isEmpty()) {
+            cout << "Landing: " << cargo.dequeue() << endl;
+        } else {
+            cout << "No flights" << endl;
+        }
+    }
+
+    void display() {
+        cout << "Emergency: ";
+        emergency.display();
+
+        cout << "Passenger: ";
+        passenger.display();
+
+        cout << "Cargo: ";
+        cargo.display();
+    }
+};
+
+int main() {
+    Airport a;
+
+    a.enqueue("P", "P1");
+    a.enqueue("C", "C1");
+    a.enqueue("E", "E1");
+    a.enqueue("P", "P2");
+    a.enqueue("C", "C2");
+    a.enqueue("E", "E2");
+
+    a.display();
+
+    cout << "Landing Order:" << endl;
+    for (int i = 0; i < 6; i++) {
+        a.dequeue();
+    }
+
+    return 0;
+}
