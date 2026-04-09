@@ -1,0 +1,110 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int arr[100];
+    int front, rear;
+
+public:
+    Queue() {
+        front = 0;
+        rear = -1;
+    }
+
+    void enqueue(int x) {
+        arr[++rear] = x;
+    }
+
+    int dequeue() {
+        return arr[front++];
+    }
+
+    int size() {
+        return rear - front + 1;
+    }
+
+    int getFront() {
+        return arr[front];
+    }
+
+    bool isEmpty() {
+        return front > rear;
+    }
+
+    void display() {
+        for (int i = front; i <= rear; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+class Stack {
+private:
+    int arr[100];
+    int top;
+
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(int x) {
+        arr[++top] = x;
+    }
+
+    int pop() {
+        return arr[top--];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
+void reverseK(Queue &q, int k) {
+    int n = q.size();
+    if (k <= 1 || k > n) return;
+
+    Stack s;
+
+  
+    for (int i = 0; i < k; i++) {
+        s.push(q.dequeue());
+    }
+
+   
+    while (!s.isEmpty()) {
+        q.enqueue(s.pop());
+    }
+
+  
+    for (int i = 0; i < n - k; i++) {
+        q.enqueue(q.dequeue());
+    }
+}
+
+int main() {
+    Queue q;
+    int n, x, k;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        q.enqueue(x);
+    }
+
+    cout << "Enter K: ";
+    cin >> k;
+
+    reverseK(q, k);
+
+    cout << "Result: ";
+    q.display();
+
+    return 0;
+}
