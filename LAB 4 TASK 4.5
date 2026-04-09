@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define MAX 100  
+
+class PrintQueue {
+private:
+    string queue[MAX];
+    int frontIndex;
+    int rearIndex;
+
+public:
+    PrintQueue() {
+        frontIndex = -1;
+        rearIndex = -1;
+    }
+
+   
+    void enqueue(const string& document_name) {
+        if (rearIndex == MAX - 1) {
+            cout << "Queue is full! Cannot add more documents."<<endl;
+            return;
+        }
+        if (frontIndex == -1) 
+        frontIndex = 0; 
+        rearIndex++;
+        queue[rearIndex] = document_name;
+        cout << "Added " << document_name << " to the print queue."<<endl;
+    }
+
+   
+    void dequeue() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "The print queue is empty. Nothing to print."<<endl;
+            return;
+        }
+        cout << "Printing " << queue[frontIndex]<<endl;
+        frontIndex++;
+    }
+
+   
+    void front() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "The print queue is empty."<<endl;
+            return;
+        }
+        cout << "The document at the front is " << queue[frontIndex] <<endl;
+    }
+
+    
+    void display() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "The print queue is empty."<<endl;
+            return;
+        }
+        cout << "Documents in the print queue:"<<endl;
+        for (int i = frontIndex; i <= rearIndex; i++) {
+            cout << (i - frontIndex + 1) << ". " << queue[i] << endl;
+        }
+    }
+};
+
+
+int main() {
+    PrintQueue pq;
+
+    pq.enqueue("Document1.pdf");
+    pq.enqueue("Document2.docx");
+    pq.enqueue("Document3.pptx");
+
+    pq.front();      
+    pq.dequeue();    
+    pq.front();      
+    pq.display();    
+
+    return 0;
+}
