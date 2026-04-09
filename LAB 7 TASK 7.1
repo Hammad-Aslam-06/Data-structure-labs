@@ -1,0 +1,128 @@
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    char arr[100];
+    int top;
+
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(char x) {
+        arr[++top] = x;
+    }
+
+    char pop() {
+        return arr[top--];
+    }
+
+    char peek() {
+        return arr[top];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
+void reverseString() {
+    Stack s;
+    string str;
+    cout << "Enter string: ";
+    cin >> str;
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        s.push(str[i]);
+    }
+
+    cout << "Reversed: ";
+    while (!s.isEmpty()) {
+        cout << s.pop();
+    }
+    cout << endl;
+}
+
+void checkParentheses() {
+    Stack s;
+    string exp;
+    cout << "Enter expression: ";
+    cin >> exp;
+
+    for (int i = 0; exp[i] != '\0'; i++) {
+        if (exp[i] == '(') {
+            s.push(exp[i]);
+        } else if (exp[i] == ')') {
+            if (s.isEmpty()) {
+                cout << "Not Balanced" << endl;
+                return;
+            }
+            s.pop();
+        }
+    }
+
+    if (s.isEmpty()) cout << "Balanced" << endl;
+    else cout << "Not Balanced" << endl;
+}
+
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+void infixToPostfix() {
+    Stack s;
+    string exp;
+    cout << "Enter infix: ";
+    cin >> exp;
+
+    cout << "Postfix: ";
+
+    for (int i = 0; exp[i] != '\0'; i++) {
+        char c = exp[i];
+
+        if (isalnum(c)) {
+            cout << c;
+        } else if (c == '(') {
+            s.push(c);
+        } else if (c == ')') {
+            while (!s.isEmpty() && s.peek() != '(') {
+                cout << s.pop();
+            }
+            s.pop();
+        } else {
+            while (!s.isEmpty() && precedence(s.peek()) >= precedence(c)) {
+                cout << s.pop();
+            }
+            s.push(c);
+        }
+    }
+
+    while (!s.isEmpty()) {
+        cout << s.pop();
+    }
+
+    cout << endl;
+}
+
+int main() {
+    int choice;
+
+    do {
+        cout <<"1 Reverse String"<<endl;
+        cout<<"2 Check Parentheses"<<endl;
+        cout<<"3 Infix to Postfix"<<endl;
+        cout<<"4 Exit"<<endl;
+        cin >> choice;
+
+        if (choice == 1) reverseString();
+        else if (choice == 2) checkParentheses();
+        else if (choice == 3) infixToPostfix();
+
+    } while (choice != 4);
+
+    return 0;
+}
