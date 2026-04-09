@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define MAX 100
+
+class PackageQueue {
+private:
+    string id[MAX];
+    string address[MAX];
+    int startTime[MAX];
+    int endTime[MAX];
+    int frontIndex;
+    int rearIndex;
+public:
+    PackageQueue() {
+        frontIndex = -1;
+        rearIndex = -1;
+    }
+
+    void enqueue(string pkgID, string addr, int start, int end) {
+        if (rearIndex == MAX-1) {
+            cout << "Queue is full" << endl;
+            return;
+        }
+        if (frontIndex == -1) frontIndex = 0;
+        rearIndex++;
+        id[rearIndex] = pkgID;
+        address[rearIndex] = addr;
+        startTime[rearIndex] = start;
+        endTime[rearIndex] = end;
+        cout << "Added " << pkgID << endl;
+    }
+
+    void dequeue() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+        cout << "Delivering " << id[frontIndex] << endl;
+        frontIndex++;
+    }
+
+    void front() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+        cout << "Front " << id[frontIndex] << " " << address[frontIndex] << " " 
+             << startTime[frontIndex] << "-" << endTime[frontIndex] << endl;
+    }
+
+    void display() {
+        if (frontIndex == -1 || frontIndex > rearIndex) {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+        for (int i = frontIndex; i <= rearIndex; i++) {
+            cout << id[i] << " " << address[i] << " " << startTime[i] << "-" << endTime[i] << endl;
+        }
+    }
+
+    void timeToDeliver(int currentTime) {
+        while (frontIndex != -1 && frontIndex <= rearIndex) {
+            if (currentTime >= startTime[frontIndex] && currentTime <= endTime[frontIndex]) {
+                cout << "Package " << id[frontIndex] << " can be delivered now" << endl;
+                return;
+            } else if (currentTime > endTime[frontIndex]) {
+                cout << "Package " << id[frontIndex] << " expired" << endl;
+                dequeue();
+            } else {
+                cout << "Package " << id[frontIndex] << " cannot be delivered yet" << endl;
+                return;
+            }
+        }
+        cout << "No packages in queue" << endl;
+    }
+};
+
+int main() {
+    PackageQueue pq;
+    pq.enqueue("PKG1","123 Main St",9,12);
+    pq.enqueue("PKG2","456 Oak St",10,14);
+    pq.enqueue("PKG3","789 Pine St",8,10);
+    pq.front();
+    pq.display();
+    pq.timeToDeliver(9);
+    pq.dequeue();
+    pq.timeToDeliver(11);
+    pq.display();
+    return 0;
+}
