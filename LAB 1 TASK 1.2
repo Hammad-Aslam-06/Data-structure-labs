@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+template <typename T>
+void printarray(T arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+template <typename T>
+void selectionsort(T arr[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        int smallno = i;
+
+        for (int j = i + 1; j < size; j++) {
+            if (arr[j] < arr[smallno]) {
+                smallno = j;
+            }
+        }
+
+        if (smallno != i) {
+            T temp = arr[i];
+            arr[i] = arr[smallno];
+            arr[smallno] = temp;
+        }
+    }
+}
+
+int main() {
+    int arr[5] = { 20, 10, 5, 25, 15 };
+
+    cout << "Entered array is:\n";
+    printarray(arr, 5);
+
+    selectionsort(arr, 5);
+
+    cout << "Selection sort is:\n";
+    printarray(arr, 5);
+
+    return 0;
+}
