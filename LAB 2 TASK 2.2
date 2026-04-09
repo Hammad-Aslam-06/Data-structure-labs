@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+class Employee {
+public:
+    virtual float calculateSalary() = 0;
+};
+
+class FullTimeEmployee : public Employee {
+private:
+    float salary;
+
+public:
+    FullTimeEmployee(float s) {
+        salary = s;
+    }
+
+    float calculateSalary() {
+        return salary;
+    }
+};
+
+class PartTimeEmployee : public Employee {
+private:
+    float hours, rate;
+
+public:
+    PartTimeEmployee(float h, float r) {
+        hours = h;
+        rate = r;
+    }
+
+    float calculateSalary() {
+        return hours * rate;
+    }
+};
+
+int main() {
+    FullTimeEmployee f(50000);
+    PartTimeEmployee p(20, 500);
+
+    cout << "Full Time Salary: " << f.calculateSalary() << endl;
+    cout << "Part Time Salary: " << p.calculateSalary() << endl;
+
+    return 0;
+}
