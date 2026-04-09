@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int id;
+    int priority;
+    Node* next;
+
+    Node(int i, int p) {
+        id = i;
+        priority = p;
+        next = nullptr;
+    }
+};
+
+class BookQueue {
+private:
+    Node* head;
+
+public:
+    BookQueue() {
+        head = nullptr;
+    }
+
+    void addStudent(int id, int priority) {
+        Node* newNode = new Node(id, priority);
+
+        if (head == nullptr || priority < head->priority) {
+            newNode->next = head;
+            head = newNode;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->priority <= priority) {
+            temp = temp->next;
+        }
+
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+
+    void removeStudent(int id) {
+        if (head == nullptr) return;
+
+        if (head->id == id) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->id != id) {
+            temp = temp->next;
+        }
+
+        if (temp->next != nullptr) {
+            Node* del = temp->next;
+            temp->next = del->next;
+            delete del;
+        }
+    }
+
+    void display() {
+        Node* temp = head;
+
+        while (temp != nullptr) {
+            cout << "(" << temp->id << "," << temp->priority << ") ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    void count() {
+        Node* temp = head;
+        int c = 0;
+
+        while (temp != nullptr) {
+            c++;
+            temp = temp->next;
+        }
+
+        cout << c << endl;
+    }
+
+    void serve() {
+        if (head == nullptr) return;
+
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+};
+
+int main() {
+    BookQueue b1, b2;
+
+    b1.addStudent(1, 2);
+    b1.addStudent(2, 1);
+    b1.addStudent(3, 3);
+
+    b2.addStudent(4, 1);
+    b2.addStudent(5, 2);
+
+    b1.display();
+    b2.display();
+
+    b1.serve();
+
+    b1.display();
+
+    return 0;
+}
