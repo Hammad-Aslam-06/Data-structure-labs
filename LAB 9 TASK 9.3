@@ -1,0 +1,180 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int playerID;
+    int score;
+    Node* next;
+
+    Node(int id, int s) {
+        playerID = id;
+        score = s;
+        next = nullptr;
+    }
+};
+
+class CircularLinkedList {
+private:
+    Node* tail;
+    Node* current;
+
+public:
+    CircularLinkedList() {
+        tail = nullptr;
+        current = nullptr;
+    }
+
+    void addPlayer(int id, int score) {
+        Node* newNode = new Node(id, score);
+
+        if (tail == nullptr) {
+            tail = newNode;
+            tail->next = tail;
+            current = tail;
+        }
+        else {
+            newNode->next = tail->next;
+            tail->next = newNode;
+            tail = newNode;
+        }
+
+        cout << "Player Added: ID " << id << endl;
+    }
+
+    void removePlayer(int id) {
+        if (tail == nullptr) {
+            cout << "No players in the game!" << endl;
+            return;
+        }
+
+        Node* curr = tail->next;
+        Node* prev = tail;
+
+        do {
+            if (curr->playerID == id) {
+
+                if (curr == tail && curr->next == tail) {
+                    cout << "Player Removed: ID " << id << endl;
+                    delete curr;
+                    tail = nullptr;
+                    current = nullptr;
+                    return;
+                }
+
+                prev->next = curr->next;
+
+                if (curr == tail) {
+                    tail = prev;
+                }
+
+                if (curr == current) {
+                    current = curr->next;
+                }
+
+                cout << "Player Removed: ID " << id << endl;
+                delete curr;
+                return;
+            }
+
+            prev = curr;
+            curr = curr->next;
+
+        } while (curr != tail->next);
+
+        cout << "Player not found!" << endl;
+    }
+
+    void nextTurn() {
+        if (current == nullptr) {
+            cout << "No players available!" << endl;
+            return;
+        }
+
+        cout << "Player " << current->playerID
+            << "'s Turn | Score: " << current->score << endl;
+
+        current = current->next;
+    }
+
+    void skipPlayer() {
+        if (current == nullptr) {
+            cout << "No players available!" << endl;
+            return;
+        }
+
+        cout << "Skipping Player " << current->playerID << endl;
+
+        current = current->next;
+
+        cout << "Next Turn: Player " << current->playerID << endl;
+
+        current = current->next;
+    }
+
+    void displayPlayers() {
+        if (tail == nullptr) {
+            cout << "No players in the game!" << endl;
+            return;
+        }
+
+        Node* temp = tail->next;
+
+        cout << "\nPlayers in Game:\n";
+
+        do {
+            cout << "Player ID: " << temp->playerID
+                << " | Score: " << temp->score << endl;
+
+            temp = temp->next;
+
+        } while (temp != tail->next);
+    }
+
+    void checkWinner() {
+        if (tail != nullptr && tail->next == tail) {
+            cout << "\nGame Over!" << endl;
+            cout << "Winner is Player "
+                << tail->playerID
+                << " with Score "
+                << tail->score << endl;
+        }
+    }
+};
+
+int main() {
+
+    CircularLinkedList game;
+
+    game.addPlayer(1, 50);
+    game.addPlayer(2, 70);
+    game.addPlayer(3, 40);
+    game.addPlayer(4, 90);
+
+    game.displayPlayers();
+
+    cout << endl;
+
+    game.nextTurn();
+    game.nextTurn();
+
+    cout << endl;
+
+    game.skipPlayer();
+
+    cout << endl;
+
+    game.removePlayer(3);
+
+    game.displayPlayers();
+
+    cout << endl;
+
+    game.removePlayer(1);
+    game.removePlayer(2);
+    game.removePlayer(4);
+
+    game.checkWinner();
+
+    return 0;
+}
