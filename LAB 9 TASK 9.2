@@ -1,0 +1,191 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node {
+public:
+    int songID;
+    string songName;
+    float duration;
+    Node* next;
+    Node* prev;
+
+    Node(int id, string name, float dur) {
+        songID = id;
+        songName = name;
+        duration = dur;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class Playlist {
+private:
+    Node* head;
+    Node* tail;
+    Node* current;
+
+public:
+    Playlist() {
+        head = nullptr;
+        tail = nullptr;
+        current = nullptr;
+    }
+
+    void addSong(int id, string name, float dur) {
+        Node* newNode = new Node(id, name, dur);
+
+        if (head == nullptr) {
+            head = tail = newNode;
+            current = head;
+        }
+        else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+
+        cout << "Song Added: " << name << endl;
+    }
+
+    void deleteSong(string name) {
+        if (head == nullptr) {
+            cout << "Playlist is empty!" << endl;
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp != nullptr && temp->songName != name) {
+            temp = temp->next;
+        }
+
+        if (temp == nullptr) {
+            cout << "Song not found!" << endl;
+            return;
+        }
+
+        if (temp == head) {
+            head = head->next;
+
+            if (head != nullptr)
+                head->prev = nullptr;
+        }
+        else {
+            temp->prev->next = temp->next;
+        }
+
+        if (temp == tail) {
+            tail = temp->prev;
+
+            if (tail != nullptr)
+                tail->next = nullptr;
+        }
+        else if (temp->next != nullptr) {
+            temp->next->prev = temp->prev;
+        }
+
+        cout << "Song Deleted: " << temp->songName << endl;
+        delete temp;
+    }
+
+    void playNext() {
+        if (current == nullptr) {
+            cout << "No songs in playlist!" << endl;
+            return;
+        }
+
+        if (current->next == nullptr) {
+            cout << "This is the last song!" << endl;
+            return;
+        }
+
+        current = current->next;
+
+        cout << "Now Playing: " << current->songName << endl;
+    }
+
+    void playPrevious() {
+        if (current == nullptr) {
+            cout << "No songs in playlist!" << endl;
+            return;
+        }
+
+        if (current->prev == nullptr) {
+            cout << "This is the first song!" << endl;
+            return;
+        }
+
+        current = current->prev;
+
+        cout << "Now Playing: " << current->songName << endl;
+    }
+
+    void reversePlaylist() {
+        Node* temp = nullptr;
+        Node* currentNode = head;
+
+        while (currentNode != nullptr) {
+            temp = currentNode->prev;
+            currentNode->prev = currentNode->next;
+            currentNode->next = temp;
+            currentNode = currentNode->prev;
+        }
+
+        if (temp != nullptr) {
+            head = temp->prev;
+        }
+
+        cout << "Playlist Reversed!" << endl;
+    }
+
+    void displayPlaylist() {
+        if (head == nullptr) {
+            cout << "Playlist is empty!" << endl;
+            return;
+        }
+
+        Node* temp = head;
+
+        cout << "Playlist:\n";
+
+        while (temp != nullptr) {
+            cout << "ID: " << temp->songID
+                << " | Name: " << temp->songName
+                << " | Duration: " << temp->duration << " mins" << endl;
+
+            temp = temp->next;
+        }
+    }
+};
+
+int main() {
+
+    Playlist playlist;
+
+    playlist.addSong(1, "Shape of You", 4.2);
+    playlist.addSong(2, "Believer", 3.8);
+    playlist.addSong(3, "Perfect", 4.5);
+
+    playlist.displayPlaylist();
+
+    cout << endl;
+
+    playlist.playNext();
+    playlist.playNext();
+    playlist.playPrevious();
+
+    cout << endl;
+
+    playlist.deleteSong("Believer");
+
+    playlist.displayPlaylist();
+
+    cout << endl;
+
+    playlist.reversePlaylist();
+
+    playlist.displayPlaylist();
+
+    return 0;
+}
