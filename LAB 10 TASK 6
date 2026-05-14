@@ -1,0 +1,201 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+void printForward(Node* head)
+{
+    if(head == NULL)
+    {
+        cout << endl;
+        return;
+    }
+
+    cout << head->data << " ";
+    printForward(head->next);
+}
+
+void printReverse(Node* tail)
+{
+    if(tail == NULL)
+    {
+        cout << endl;
+        return;
+    }
+
+    cout << tail->data << " ";
+    printReverse(tail->prev);
+}
+
+Node* getTail(Node* head)
+{
+    if(head == NULL || head->next == NULL)
+        return head;
+
+    return getTail(head->next);
+}
+
+Node* insertBeginning(Node* head, int value)
+{
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = head;
+
+    if(head != NULL)
+        head->prev = newNode;
+
+    return newNode;
+}
+
+Node* insertEnd(Node* head, int value)
+{
+    if(head == NULL)
+    {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = NULL;
+        newNode->prev = NULL;
+        return newNode;
+    }
+
+    head->next = insertEnd(head->next, value);
+
+    if(head->next != NULL)
+        head->next->prev = head;
+
+    return head;
+}
+
+Node* insertPosition(Node* head, int value, int pos)
+{
+    if(pos <= 1 || head == NULL)
+        return insertBeginning(head, value);
+
+    head->next = insertPosition(head->next, value, pos - 1);
+
+    if(head->next != NULL)
+        head->next->prev = head;
+
+    return head;
+}
+
+Node* deleteByValue(Node* head, int value)
+{
+    if(head == NULL)
+        return NULL;
+
+    if(head->data == value)
+    {
+        Node* temp = head->next;
+
+        if(temp != NULL)
+            temp->prev = head->prev;
+
+        delete head;
+        return temp;
+    }
+
+    head->next = deleteByValue(head->next, value);
+
+    if(head->next != NULL)
+        head->next->prev = head;
+
+    return head;
+}
+
+Node* deletePosition(Node* head, int pos)
+{
+    if(head == NULL)
+        return NULL;
+
+    if(pos == 1)
+    {
+        Node* temp = head->next;
+
+        if(temp != NULL)
+            temp->prev = NULL;
+
+        delete head;
+        return temp;
+    }
+
+    head->next = deletePosition(head->next, pos - 1);
+
+    if(head->next != NULL)
+        head->next->prev = head;
+
+    return head;
+}
+
+int search(Node* head, int value, int index)
+{
+    if(head == NULL)
+        return -1;
+
+    if(head->data == value)
+        return index;
+
+    return search(head->next, value, index + 1);
+}
+
+bool isPalindromeUtil(Node* left, Node* right)
+{
+    if(left == NULL || right == NULL)
+        return true;
+
+    if(left == right)
+        return true;
+
+    if(left->prev == right)
+        return (left->data == right->data);
+
+    if(left->data != right->data)
+        return false;
+
+    return isPalindromeUtil(left->next, right->prev);
+}
+
+bool isPalindrome(Node* head)
+{
+    if(head == NULL)
+        return true;
+
+    Node* tail = getTail(head);
+
+    return isPalindromeUtil(head, tail);
+}
+
+int main()
+{
+    Node* head = NULL;
+
+    head = insertBeginning(head, 10);
+    head = insertEnd(head, 20);
+    head = insertEnd(head, 30);
+    head = insertEnd(head, 20);
+    head = insertEnd(head, 10);
+
+    printForward(head);
+
+    Node* tail = getTail(head);
+    printReverse(tail);
+
+    cout << "Search 30: " << search(head, 30, 1) << endl;
+
+    cout << "Palindrome: " << (isPalindrome(head) ? "Yes" : "No") << endl;
+
+    head = deleteByValue(head, 30);
+    printForward(head);
+
+    head = deletePosition(head, 2);
+    printForward(head);
+
+    return 0;
+}
