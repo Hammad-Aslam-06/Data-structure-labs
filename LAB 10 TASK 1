@@ -1,0 +1,26 @@
+#include <iostream>
+using namespace std;
+
+void printArray(int arr[], int size)
+{
+    // Base case
+    if (size == 0)
+    {
+        return;
+    }
+
+    // Recursive call
+    printArray(arr, size - 1);
+
+    // Print element
+    cout << arr[size - 1] << " ";
+}
+
+int main()
+{
+    int arr[] = { 10, 20, 30, 40, 50 };
+
+    printArray(arr, 5);
+
+    return 0;
+}
