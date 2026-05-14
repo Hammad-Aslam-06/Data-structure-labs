@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+int findMax(int arr[], int n)
+{
+    if(n == 1)
+        return arr[0];
+
+    int maxFromRest = findMax(arr, n - 1);
+
+    if(arr[n - 1] > maxFromRest)
+        return arr[n - 1];
+
+    return maxFromRest;
+}
+
+bool subsetSum(int arr[], int n, int target, int i)
+{
+    if(target == 0)
+        return true;
+
+    if(i == n || target < 0)
+        return false;
+
+    return subsetSum(arr, n, target - arr[i], i + 1) ||
+           subsetSum(arr, n, target, i + 1);
+}
+
+bool checkWithoutMax(int arr[], int n, int maxVal)
+{
+    return subsetSum(arr, n, maxVal, 0);
+}
+
+int magicNumber(int arr[], int n)
+{
+    if(n == 0)
+        return -1;
+
+    int maxVal = findMax(arr, n);
+
+    if(checkWithoutMax(arr, n, maxVal))
+        return maxVal;
+
+    return magicNumber(arr, n - 1);
+}
+
+int main()
+{
+    int arr[1000];
+    int n;
+
+    cin >> n;
+
+    for(int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    cout << magicNumber(arr, n);
+
+    return 0;
+}
