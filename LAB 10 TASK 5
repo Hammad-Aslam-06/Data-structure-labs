@@ -1,0 +1,128 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node* next;
+};
+
+void printList(Node* head)
+{
+    if(head == NULL)
+    {
+        cout << endl;
+        return;
+    }
+
+    cout << head->data << " ";
+    printList(head->next);
+}
+
+Node* insertAtBeginning(Node* head, int value)
+{
+    Node* newNode = new Node();
+    newNode->data = value;
+
+    newNode->next = head;
+    return newNode;
+}
+
+Node* insertAtEnd(Node* head, int value)
+{
+    if(head == NULL)
+    {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = NULL;
+        return newNode;
+    }
+
+    head->next = insertAtEnd(head->next, value);
+    return head;
+}
+
+Node* insertAtPosition(Node* head, int value, int pos)
+{
+    if(pos <= 1 || head == NULL)
+    {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = head;
+        return newNode;
+    }
+
+    head->next = insertAtPosition(head->next, value, pos - 1);
+    return head;
+}
+
+Node* deleteByValue(Node* head, int value)
+{
+    if(head == NULL)
+        return NULL;
+
+    if(head->data == value)
+    {
+        Node* temp = head->next;
+        delete head;
+        return temp;
+    }
+
+    head->next = deleteByValue(head->next, value);
+    return head;
+}
+
+Node* deleteAtPosition(Node* head, int pos)
+{
+    if(head == NULL)
+        return NULL;
+
+    if(pos == 1)
+    {
+        Node* temp = head->next;
+        delete head;
+        return temp;
+    }
+
+    head->next = deleteAtPosition(head->next, pos - 1);
+    return head;
+}
+
+int search(Node* head, int value, int index)
+{
+    if(head == NULL)
+        return -1;
+
+    if(head->data == value)
+        return index;
+
+    return search(head->next, value, index + 1);
+}
+
+int main()
+{
+    Node* head = NULL;
+
+    head = insertAtBeginning(head, 30);
+    head = insertAtBeginning(head, 20);
+    head = insertAtBeginning(head, 10);
+
+    printList(head);
+
+    head = insertAtEnd(head, 40);
+    printList(head);
+
+    head = insertAtPosition(head, 25, 3);
+    printList(head);
+
+    head = deleteByValue(head, 20);
+    printList(head);
+
+    head = deleteAtPosition(head, 2);
+    printList(head);
+
+    cout << "Search 40 at position: " << search(head, 40, 1) << endl;
+
+    return 0;
+}
